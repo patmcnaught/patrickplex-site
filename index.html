@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patrick McNaught — Systems & Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f6f3;
+    --surface: #ffffff;
+    --border: #e2e0d8;
+    --border-mid: #ccc9be;
+    --text: #1a1916;
+    --text-mid: #5a5850;
+    --text-muted: #9a9588;
+    --accent: #1a1916;
+    --accent-warm: #c4622d;
+    --tag-bg: #eeecd6;
+    --tag-text: #5a5233;
+    --nav-h: 60px;
+    --max-w: 860px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--nav-h);
+    background: rgba(247,246,243,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+  }
+
+  .nav-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--accent-warm); }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text-mid);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: color 0.15s;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  /* MAIN LAYOUT */
+  main {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  section {
+    padding: 5rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  section:last-child { border-bottom: none; }
+
+  /* HERO */
+  #hero {
+    padding-top: calc(var(--nav-h) + 5rem);
+    padding-bottom: 5rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 3rem;
+    align-items: end;
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-warm);
+    margin-bottom: 1.25rem;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.8rem, 6vw, 4.2rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--accent-warm);
+  }
+
+  .hero-desc {
+    font-size: 16px;
+    color: var(--text-mid);
+    max-width: 520px;
+    line-height: 1.75;
+    margin-bottom: 2rem;
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1.25rem;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.02em;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.15s;
+    cursor: pointer;
+    border: 1px solid transparent;
+  }
+
+  .btn-primary {
+    background: var(--text);
+    color: var(--bg);
+    border-color: var(--text);
+  }
+
+  .btn-primary:hover { background: #3a3830; border-color: #3a3830; }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text);
+    border-color: var(--border-mid);
+  }
+
+  .btn-ghost:hover { border-color: var(--text); }
+
+  .hero-meta {
+    text-align: right;
+    align-self: end;
+  }
+
+  .location-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .availability {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    color: #3a7d44;
+    background: #e8f5ea;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid #c3e6c9;
+  }
+
+  .availability::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: #3a7d44;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* SECTION HEADERS */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.5rem;
+  }
+
+  /* ABOUT */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .about-text p {
+    color: var(--text-mid);
+    margin-bottom: 1rem;
+    font-size: 15.5px;
+  }
+
+  .about-sidebar {}
+
+  .sidebar-block {
+    margin-bottom: 2rem;
+  }
+
+  .sidebar-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.6rem;
+  }
+
+  .sidebar-val {
+    font-size: 14px;
+    color: var(--text-mid);
+  }
+
+  /* EXPERIENCE */
+  .exp-list { display: flex; flex-direction: column; gap: 0; }
+
+  .exp-item {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 2rem;
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .exp-item:last-child { border-bottom: none; }
+
+  .exp-meta {}
+
+  .exp-dates {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    margin-bottom: 0.3rem;
+    display: block;
+  }
+
+  .exp-company {
+    font-size: 12px;
+    color: var(--accent-warm);
+    font-weight: 500;
+  }
+
+  .exp-body {}
+
+  .exp-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.01em;
+  }
+
+  .exp-desc {
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.7;
+    margin-bottom: 0.75rem;
+  }
+
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--tag-bg);
+    color: var(--tag-text);
+    border-radius: 3px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.02em;
+  }
+
+  /* SKILLS */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .skill-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .skill-card-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .skill-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .skill-pill {
+    font-size: 13px;
+    color: var(--text-mid);
+    padding: 3px 10px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    background: var(--bg);
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* PROJECTS */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    transition: border-color 0.15s, transform 0.15s;
+  }
+
+  .project-card:hover {
+    border-color: var(--border-mid);
+    transform: translateY(-2px);
+  }
+
+  .project-icon {
+    font-size: 22px;
+    margin-bottom: 0.25rem;
+  }
+
+  .project-name {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+
+  .project-desc {
+    font-size: 13.5px;
+    color: var(--text-mid);
+    line-height: 1.65;
+    flex: 1;
+  }
+
+  .project-link {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent-warm);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 0.25rem;
+  }
+
+  .project-link:hover { text-decoration: underline; }
+
+  /* BLOG */
+  .blog-list { display: flex; flex-direction: column; gap: 0; }
+
+  .blog-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 2rem;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    color: inherit;
+    transition: padding-left 0.15s;
+  }
+
+  .blog-item:first-child { border-top: 1px solid var(--border); }
+
+  .blog-item:hover { padding-left: 6px; }
+
+  .blog-item-left {}
+
+  .blog-title {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .blog-preview {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .blog-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    letter-spacing: 0.04em;
+  }
+
+  /* CONTACT */
+  .contact-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .contact-info p {
+    color: var(--text-mid);
+    font-size: 15.5px;
+    margin-bottom: 1.5rem;
+  }
+
+  .contact-links { display: flex; flex-direction: column; gap: 0.75rem; }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: var(--text-mid);
+    font-size: 14px;
+    transition: color 0.15s;
+  }
+
+  .contact-link:hover { color: var(--text); }
+
+  .contact-link-icon {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    width: 60px;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+  }
+
+  /* CONTACT FORM */
+  .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+
+  .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+
+  .form-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .form-input, .form-textarea {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border-mid);
+    border-radius: 4px;
+    padding: 0.6rem 0.85rem;
+    outline: none;
+    transition: border-color 0.15s;
+    resize: none;
+  }
+
+  .form-input:focus, .form-textarea:focus { border-color: var(--text); }
+
+  .form-textarea { height: 110px; }
+
+  /* FOOTER */
+  footer {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+  }
+
+  .footer-copy {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* MOBILE */
+  @media (max-width: 680px) {
+    nav { padding: 0 1rem; }
+    .nav-links { display: none; }
+    main { padding: 0 1.25rem; }
+    #hero { grid-template-columns: 1fr; gap: 1.5rem; padding-top: calc(var(--nav-h) + 3rem); }
+    .hero-meta { text-align: left; }
+    .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .exp-item { grid-template-columns: 1fr; gap: 0.5rem; }
+    .contact-layout { grid-template-columns: 1fr; gap: 2rem; }
+    footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+  }
+
+  /* FADE IN ANIMATION */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#hero" class="nav-logo">pm<span>.</span>dev</a>
+  <ul class="nav-links">
+    <li><a href="#about">about</a></li>
+    <li><a href="#experience">experience</a></li>
+    <li><a href="#skills">skills</a></li>
+    <li><a href="#projects">projects</a></li>
+    <li><a href="#blog">writing</a></li>
+    <li><a href="#contact">contact</a></li>
+  </ul>
+</nav>
+
+<main>
+  <!-- HERO -->
+  <section id="hero">
+    <div>
+      <p class="hero-eyebrow">Patrick McNaught</p>
+      <h1>Systems thinker.<br><em>Security-minded.</em><br>Builder.</h1>
+      <p class="hero-desc">
+        I work at the intersection of infrastructure, security, and automation — from cloud-native platforms to homelab experiments that turn into real tools.
+      </p>
+      <div class="hero-ctas">
+        <a href="#contact" class="btn btn-primary">Get in touch →</a>
+        <a href="#experience" class="btn btn-ghost">View experience</a>
+      </div>
+    </div>
+    <div class="hero-meta">
+      <span class="location-tag">📍 Scituate, MA</span>
+      <span class="availability">open to work</span>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <p class="section-label">About</p>
+    <div class="about-grid fade-up">
+      <div class="about-text">
+        <p>
+          I'm a technically driven professional with deep experience across cybersecurity, cloud infrastructure, and systems engineering. I enjoy building things that solve real problems — whether that's a homelab monitoring stack, an automation pipeline, or a production security platform.
+        </p>
+        <p>
+          My background spans pre-sales engineering, security architecture, and hands-on technical work. I'm equally comfortable walking a CISO through a risk management strategy and spinning up a Proxmox cluster at home to test the same concepts.
+        </p>
+        <p>
+          Outside of work I collect and resell Pokémon TCG, run a network of automation tools, and spend too much time optimizing things that don't need optimizing — but always learn something in the process.
+        </p>
+      </div>
+      <div class="about-sidebar">
+        <div class="sidebar-block">
+          <div class="sidebar-label">Location</div>
+          <div class="sidebar-val">Scituate, Massachusetts</div>
+        </div>
+        <div class="sidebar-block">
+          <div class="sidebar-label">Focus areas</div>
+          <div class="sidebar-val">Cloud security · Infrastructure · Pre-sales engineering · Automation</div>
+        </div>
+        <div class="sidebar-block">
+          <div class="sidebar-label">Currently exploring</div>
+          <div class="sidebar-val">Cloud-native security (CNAPP/CSPM), sales engineering, technical writing</div>
+        </div>
+        <div class="sidebar-block">
+          <div class="sidebar-label">Homelab</div>
+          <div class="sidebar-val">Proxmox · UDM Pro · Tailscale · Synology · Plex</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <p class="section-label">Experience</p>
+    <div class="exp-list">
+
+      <div class="exp-item fade-up">
+        <div class="exp-meta">
+          <span class="exp-dates">2023 — Present</span>
+          <span class="exp-company">Independent</span>
+        </div>
+        <div class="exp-body">
+          <p class="exp-title">Sales Engineer — Cybersecurity (Consulting)</p>
+          <p class="exp-desc">Technical pre-sales and consulting across cloud-native security platforms. Conduct competitive analysis, architect demonstrations, and support enterprise evaluations for CSPM, CNAPP, and third-party risk solutions.</p>
+          <div class="tag-row">
+            <span class="tag">CNAPP</span>
+            <span class="tag">CSPM</span>
+            <span class="tag">AWS</span>
+            <span class="tag">pre-sales</span>
+            <span class="tag">risk management</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="exp-item fade-up">
+        <div class="exp-meta">
+          <span class="exp-dates">2021 — 2023</span>
+          <span class="exp-company">Self-employed</span>
+        </div>
+        <div class="exp-body">
+          <p class="exp-title">Infrastructure & Automation Engineer</p>
+          <p class="exp-desc">Built and operated cloud-based automation infrastructure on AWS EC2, including management dashboards in Node.js/React with real-time metrics, cost tracking, and auto-shutdown logic. Deployed proxy network architecture and tooling for retail automation workflows.</p>
+          <div class="tag-row">
+            <span class="tag">AWS EC2</span>
+            <span class="tag">Node.js</span>
+            <span class="tag">React</span>
+            <span class="tag">CloudWatch</span>
+            <span class="tag">proxy infra</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="exp-item fade-up">
+        <div class="exp-meta">
+          <span class="exp-dates">Ongoing</span>
+          <span class="exp-company">patrickplex.com</span>
+        </div>
+        <div class="exp-body">
+          <p class="exp-title">Homelab — Infrastructure & Security Research</p>
+          <p class="exp-desc">Maintain a full virtualization stack (Proxmox hypervisor, VMs, LXC containers, NAS, Tailscale mesh VPN) for continuous learning in networking, security, and systems administration. Projects include CUPS print server, KVM-over-IP, Plex with Prometheus monitoring, and self-hosted sync services.</p>
+          <div class="tag-row">
+            <span class="tag">Proxmox</span>
+            <span class="tag">Tailscale</span>
+            <span class="tag">Synology</span>
+            <span class="tag">Prometheus</span>
+            <span class="tag">networking</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <p class="section-label">Skills & Tools</p>
+    <div class="skills-grid fade-up">
+      <div class="skill-card">
+        <div class="skill-card-title">Cloud & Infrastructure</div>
+        <div class="skill-pills">
+          <span class="skill-pill">AWS</span>
+          <span class="skill-pill">EC2</span>
+          <span class="skill-pill">CloudWatch</span>
+          <span class="skill-pill">Proxmox</span>
+          <span class="skill-pill">LXC</span>
+          <span class="skill-pill">Tailscale</span>
+          <span class="skill-pill">Synology NAS</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-card-title">Security</div>
+        <div class="skill-pills">
+          <span class="skill-pill">CNAPP</span>
+          <span class="skill-pill">CSPM</span>
+          <span class="skill-pill">3rd-party risk</span>
+          <span class="skill-pill">Black Kite</span>
+          <span class="skill-pill">Upwind</span>
+          <span class="skill-pill">network security</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-card-title">Development</div>
+        <div class="skill-pills">
+          <span class="skill-pill">Node.js</span>
+          <span class="skill-pill">React</span>
+          <span class="skill-pill">JavaScript</span>
+          <span class="skill-pill">Python</span>
+          <span class="skill-pill">Bash</span>
+          <span class="skill-pill">Git</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-card-title">Networking</div>
+        <div class="skill-pills">
+          <span class="skill-pill">UDM Pro</span>
+          <span class="skill-pill">VLANs</span>
+          <span class="skill-pill">DNS</span>
+          <span class="skill-pill">SSH</span>
+          <span class="skill-pill">IRC/DCC</span>
+          <span class="skill-pill">proxy infra</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-card-title">Pre-sales & GTM</div>
+        <div class="skill-pills">
+          <span class="skill-pill">technical demos</span>
+          <span class="skill-pill">POC delivery</span>
+          <span class="skill-pill">RFP responses</span>
+          <span class="skill-pill">competitive intel</span>
+          <span class="skill-pill">solution design</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-card-title">Platforms & Tools</div>
+        <div class="skill-pills">
+          <span class="skill-pill">Zoho Mail</span>
+          <span class="skill-pill">Plex</span>
+          <span class="skill-pill">Prometheus</span>
+          <span class="skill-pill">CUPS</span>
+          <span class="skill-pill">KOReader</span>
+          <span class="skill-pill">Bambu Lab</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <p class="section-label">Projects</p>
+    <div class="projects-grid fade-up">
+
+      <div class="project-card">
+        <div class="project-icon">⚡</div>
+        <p class="project-name">EC2 Management Dashboard</p>
+        <p class="project-desc">Node.js/React dashboard for managing AWS EC2 instances with real-time CloudWatch metrics, session cost tracking, and auto-shutdown. Built for production automation workflows.</p>
+        <div class="tag-row" style="margin-top:auto;">
+          <span class="tag">Node.js</span>
+          <span class="tag">React</span>
+          <span class="tag">AWS</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-icon">🔌</div>
+        <p class="project-name">Patrickplex Homelab</p>
+        <p class="project-desc">Full virtualization stack with Proxmox, LXC containers, Synology NAS, UDM Pro, Tailscale mesh VPN, and self-hosted services. Prometheus + node-exporter monitoring throughout.</p>
+        <div class="tag-row" style="margin-top:auto;">
+          <span class="tag">Proxmox</span>
+          <span class="tag">Prometheus</span>
+          <span class="tag">Tailscale</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-icon">🔒</div>
+        <p class="project-name">Proxy Reseller Platform</p>
+        <p class="project-desc">Architected a white-label residential proxy reseller business targeting the retail automation community, with curated low-density pools and a formal go-to-market strategy.</p>
+        <div class="tag-row" style="margin-top:auto;">
+          <span class="tag">networking</span>
+          <span class="tag">business</span>
+          <span class="tag">automation</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-icon">📦</div>
+        <p class="project-name">Pokémon TCG Pipeline</p>
+        <p class="project-desc">End-to-end card collection and resale workflow: Fujitsu fi-7160 scanning, Synology NAS storage, PSA grading submissions, and sales tracking across TCGPlayer and eBay.</p>
+        <div class="tag-row" style="margin-top:auto;">
+          <span class="tag">automation</span>
+          <span class="tag">PSA</span>
+          <span class="tag">TCGPlayer</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-icon">🌐</div>
+        <p class="project-name">IP Fraud Scoring Tool</p>
+        <p class="project-desc">Evaluated and scored CIDR ranges against fraud databases for proxy quality assessment. Batch-processed ranges to surface auto-cancellation and detection patterns.</p>
+        <div class="tag-row" style="margin-top:auto;">
+          <span class="tag">Python</span>
+          <span class="tag">networking</span>
+          <span class="tag">security</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-icon">☀️</div>
+        <p class="project-name">DIY Rooftop Solar</p>
+        <p class="project-desc">Designed a residential solar installation sized for future EV charging load (Scout Traveler EREV). Researched permitting, panel selection, and inverter options for Scituate, MA.</p>
+        <div class="tag-row" style="margin-top:auto;">
+          <span class="tag">energy</span>
+          <span class="tag">hardware</span>
+          <span class="tag">research</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- BLOG / WRITING -->
+  <section id="blog">
+    <p class="section-label">Writing</p>
+    <p style="color: var(--text-mid); margin-bottom: 2rem; font-size: 15px;">Notes on infrastructure, security, and building things.</p>
+    <div class="blog-list fade-up">
+
+      <a href="#" class="blog-item">
+        <div class="blog-item-left">
+          <p class="blog-title">Setting up NanoKVM PCIe for remote server access</p>
+          <p class="blog-preview">Why I chose open-source, cloud-free KVM over IP and how to configure it on Proxmox.</p>
+        </div>
+        <span class="blog-date">Jun 2025</span>
+      </a>
+
+      <a href="#" class="blog-item">
+        <div class="blog-item-left">
+          <p class="blog-title">Scoring proxy CIDR ranges for retail automation</p>
+          <p class="blog-preview">How to batch-evaluate IP ranges against fraud databases and what the patterns reveal.</p>
+        </div>
+        <span class="blog-date">May 2025</span>
+      </a>
+
+      <a href="#" class="blog-item">
+        <div class="blog-item-left">
+          <p class="blog-title">CNAPP vs CSPM: what actually matters for cloud-native security</p>
+          <p class="blog-preview">A practitioner's perspective after evaluating multiple vendors in the space.</p>
+        </div>
+        <span class="blog-date">Apr 2025</span>
+      </a>
+
+      <a href="#" class="blog-item">
+        <div class="blog-item-left">
+          <p class="blog-title">Running a self-hosted kosync server on Proxmox</p>
+          <p class="blog-preview">Syncing KOReader progress across devices without cloud dependencies.</p>
+        </div>
+        <span class="blog-date">Mar 2025</span>
+      </a>
+
+      <a href="#" class="blog-item">
+        <div class="blog-item-left">
+          <p class="blog-title">My Pokémon card scanning workflow with a Fujitsu fi-7160</p>
+          <p class="blog-preview">PaperStream IP settings, background configuration, and NAS-based file organization.</p>
+        </div>
+        <span class="blog-date">Feb 2025</span>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <p class="section-label">Contact</p>
+    <div class="contact-layout fade-up">
+      <div class="contact-info">
+        <h2>Let's work together.</h2>
+        <p>Whether it's a security consulting engagement, a technical writing project, or a freelance engineering contract — I'd love to hear what you're building.</p>
+        <div class="contact-links">
+          <a href="mailto:patrick@patrickplex.com" class="contact-link">
+            <span class="contact-link-icon">email</span>
+            patrick@patrickplex.com
+          </a>
+          <a href="https://github.com/" class="contact-link">
+            <span class="contact-link-icon">github</span>
+            github.com/patmcnaught
+          </a>
+          <a href="https://linkedin.com/" class="contact-link">
+            <span class="contact-link-icon">linkedin</span>
+            linkedin.com/in/patrickmcnaught
+          </a>
+          <a href="https://twitter.com/" class="contact-link">
+            <span class="contact-link-icon">twitter</span>
+            @patrickplex
+          </a>
+        </div>
+      </div>
+      <div>
+        <form class="contact-form" onsubmit="handleSubmit(event)">
+          <div class="form-group">
+            <label class="form-label">Name</label>
+            <input type="text" class="form-input" placeholder="Your name" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-input" placeholder="you@example.com" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Message</label>
+            <textarea class="form-textarea" placeholder="What are you working on?" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="align-self: flex-start;">Send message →</button>
+          <p id="form-success" style="display:none; font-size:13px; color: #3a7d44; font-family: 'DM Mono', monospace;">Message sent — I'll be in touch soon.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span class="footer-name">Patrick McNaught · patrickplex.com</span>
+  <span class="footer-copy">© 2025</span>
+</footer>
+
+<script>
+  // Intersection observer for fade-up animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Fake form submission
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.textContent = 'Sending…';
+    btn.disabled = true;
+    setTimeout(() => {
+      btn.style.display = 'none';
+      document.getElementById('form-success').style.display = 'block';
+      e.target.reset();
+    }, 800);
+  }
+
+  // Active nav highlight
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      const top = section.offsetTop - 100;
+      if (window.scrollY >= top) current = section.getAttribute('id');
+    });
+    navLinks.forEach(link => {
+      link.style.color = link.getAttribute('href') === '#' + current
+        ? 'var(--text)'
+        : '';
+    });
+  });
+</script>
+</body>
+</html>
