@@ -1022,13 +1022,35 @@
   function handleSubmit(e) {
     e.preventDefault();
     const btn = e.target.querySelector('button[type="submit"]');
+    const name = e.target.querySelector('input[type="text"]').value;
+    const email = e.target.querySelector('input[type="email"]').value;
+    const message = e.target.querySelector('textarea').value;
+
     btn.textContent = 'Sending…';
     btn.disabled = true;
-    setTimeout(() => {
-      btn.style.display = 'none';
-      document.getElementById('form-success').style.display = 'block';
-      e.target.reset();
-    }, 800);
+
+    fetch('https://contact-form.patmcnaught.workers.dev', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, message })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        btn.style.display = 'none';
+        document.getElementById('form-success').style.display = 'block';
+        e.target.reset();
+      } else {
+        btn.textContent = 'Send message →';
+        btn.disabled = false;
+        alert('Something went wrong — please try emailing directly.');
+      }
+    })
+    .catch(() => {
+      btn.textContent = 'Send message →';
+      btn.disabled = false;
+      alert('Something went wrong — please try emailing directly.');
+    });
   }
 
   // Active nav highlight
